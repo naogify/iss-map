@@ -1,6 +1,8 @@
 const map = new geolonia.Map('#map');
 let marker;
+let currentTimeZone;
 
+// ISS の画像をアニメーション
 function moveISS(marker) {
   fetch('https://api.wheretheiss.at/v1/satellites/25544')
     .then(response => response.json())
@@ -8,10 +10,13 @@ function moveISS(marker) {
       const cordinates = [data.longitude,data.latitude];
       marker.setLngLat(cordinates).addTo(map);
       map.flyTo({center: cordinates});
+      const time = timespace.getFuzzyLocalTimeFromPoint(Date.now(), [cordinates[1],cordinates[0]]);
+      currentTimeZone = time._z.name
     });
   setTimeout(function(){moveISS(marker)}, 5000);
 }
 
+// 地図を表示
 map.on('load', () => {
   const container = document.querySelector('#iss');
   container.style.display = 'block';
@@ -22,11 +27,17 @@ map.on('load', () => {
   moveISS(marker);
 });
 
+
 function updateTime(selector, date) {
   const elm = document.querySelector(selector);
   elm.innerHTML = date
 }
 
+// タイムゾーンのリスト
+const timeZoneList = {
+}
+
+// 時間を更新
 const updateTimeCycle = () => {
   const UTC = new Date(Date.now() + (new Date().getTimezoneOffset() * 60 * 1000));
   const year = UTC.getFullYear();
@@ -40,6 +51,6 @@ const updateTimeCycle = () => {
   
   updateTime('.jst span',`${year}/${month}/${date} ${hour+9}:${min}:${second} GMT+0900`);
 
-  updateTime('.local span', );
+  updateTime('.local span',`${year}/${month}/${date} ${timeZoneList[currentTimeZone]}:${min}:${second} GMT+0900`);
 }
 setInterval(updateTimeCycle, 1000);
