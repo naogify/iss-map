@@ -1,4 +1,4 @@
-# iss-on-geolonia
+# iss-map
 
 5秒ごとに ISS の位置をリアルタイムに表示します。
 
