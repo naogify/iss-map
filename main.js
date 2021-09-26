@@ -25,8 +25,6 @@ map.on('load', () => {
     offset: [-3,-28],
   })
   moveISS(marker);
-
-  map.setStyle('mapbox://styles/mapbox/' + layerId);
 });
 
 
@@ -70,7 +68,7 @@ const timeZoneList = {
 'Asia/Karachi': +5,
 'Asia/Kathmandu': +5.75,
 'Asia/Kolkata': +5.5,
-'Asia/Krasnoyarsk': +8
+'Asia/Krasnoyarsk': +8,
 'Asia/Omsk': +7,
 'Asia/Rangoon': +6.5,
 'Asia/Shanghai': +8,
@@ -106,7 +104,7 @@ const timeZoneList = {
 'Pacific/Pitcairn': -8,
 'Pacific/Tongatapu':　+13,
 'UTC': +0,
-  
+'Asia/Taipei': +8
 }
 
 // 時間を更新
@@ -126,6 +124,7 @@ const updateTimeCycle = () => {
   let localTime = '';
   if (timeObj) {
     const currentTimeZone = timeObj._z.name
+    console.log(currentTimeZone)
     const timeZoneOffset = timeZoneList[currentTimeZone];
     const timeZoneOffsetText = `${timeZoneOffset}`.padStart(2, "0");
     localTime = `${year}/${month}/${date} ${hour+timeZoneOffset}:${min}:${second} GMT${timeZoneOffsetText}00`;
