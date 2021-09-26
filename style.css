@@ -1,0 +1,20 @@
+html, body, #map {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+#iss
+{
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  display: none;
+}
+
+#iss img
+{
+  max-width: 100%;
+  height: auto;
+}
