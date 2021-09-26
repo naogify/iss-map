@@ -10,6 +10,7 @@ function moveISS(marker) {
       const cordinates = [data.longitude,data.latitude];
       marker.setLngLat(cordinates).addTo(map);
       map.flyTo({center: cordinates});
+      console.log(cordinates)
       timeObj = timespace.getFuzzyLocalTimeFromPoint(Date.now(), cordinates);
     });
   setTimeout(function(){moveISS(marker)}, 5000);
@@ -24,6 +25,8 @@ map.on('load', () => {
     offset: [-3,-28],
   })
   moveISS(marker);
+
+  map.setStyle('mapbox://styles/mapbox/' + layerId);
 });
 
 
@@ -50,7 +53,7 @@ const updateTimeCycle = () => {
   
   updateTime('.jst span',`${year}/${month}/${date} ${hour+9}:${min}:${second} GMT+0900`);
 
-  const localTime;
+  let localTime = '';
   if (timeObj) {
     const currentTimeZone = timeObj._z.name
     const timeZoneOffset = timeZoneList[currentTimeZone];
@@ -59,7 +62,6 @@ const updateTimeCycle = () => {
   } else {
     localTime = 'Can not get local time because ISS fly over the sea.'
   }
-
   updateTime('.local span', localTime);
 
 }
