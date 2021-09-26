@@ -8,7 +8,7 @@ function moveISS(marker) {
       console.log(data);
       const cordinates = [data.longitude,data.latitude];
       marker.setLngLat(cordinates).addTo(map);
-      map.panTo(cordinates);
+      map.flyTo({center: cordinates});
     });
   setTimeout(function(){moveISS(marker)}, 5000);
 }
