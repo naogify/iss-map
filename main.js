@@ -25,6 +25,7 @@ map.on('load', () => {
     offset: [-3,-28],
   })
   moveISS(marker);
+  // map.setStyle('https://raw.githubusercontent.com/geolonia/midnight/master/style.json');
 });
 
 
