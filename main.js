@@ -35,6 +35,9 @@ function updateTime(selector, date) {
 
 // タイムゾーンのリスト
 const timeZoneList = {
+  'Africa/Johannesburg': +2,
+  'Africa/Johannesburg': +2,
+  'Africa/Johannesburg': +2,
 }
 
 // 時間を更新
@@ -52,7 +55,6 @@ const updateTimeCycle = () => {
   updateTime('.jst span',`${year}/${month}/${date} ${hour+9}:${min}:${second} GMT+0900`);
 
   updateTime('.local span',`${year}/${month}/${date} ${timeZoneList[currentTimeZone]}:${min}:${second} GMT+0900`);
-  updateTime('.local span','0:00');
 
 }
 setInterval(updateTimeCycle, 1000);
