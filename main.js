@@ -5,7 +5,6 @@ function moveISS(marker) {
   fetch('https://api.wheretheiss.at/v1/satellites/25544')
     .then(response => response.json())
     .then(data => {
-      console.log(data);
       const cordinates = [data.longitude,data.latitude];
       marker.setLngLat(cordinates).addTo(map);
       map.flyTo({center: cordinates});
@@ -22,3 +21,25 @@ map.on('load', () => {
   })
   moveISS(marker);
 });
+
+function updateTime(selector, date) {
+  const elm = document.querySelector(selector);
+  elm.innerHTML = date
+}
+
+const updateTimeCycle = () => {
+  const UTC = new Date(Date.now() + (new Date().getTimezoneOffset() * 60 * 1000));
+  const year = UTC.getFullYear();
+  const month = `${UTC.getMonth() + 1}`.padStart(2, "0");
+  const date = UTC.getDate();
+  const hour = UTC.getHours()
+  const min = UTC.getMinutes();
+  const second = UTC.getSeconds();
+
+  updateTime('.utc span', `${year}/${month}/${date} ${hour}:${min}:${second} GMT`);
+  
+  updateTime('.jst span',`${year}/${month}/${date} ${hour+9}:${min}:${second} GMT+0900`);
+
+  updateTime('.local span', );
+}
+setInterval(updateTimeCycle, 1000);

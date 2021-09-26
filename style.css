@@ -18,3 +18,19 @@ html, body, #map {
   max-width: 100%;
   height: auto;
 }
+
+.time
+{
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  background-color: #ffffff;
+  padding: 10px 25px;
+  margin: 10px;
+}
+
+.shadow
+{
+  box-shadow: 0 0 5px #eee;
+  border: 1px solid #dedede;
+}
