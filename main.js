@@ -1,6 +1,6 @@
 const map = new geolonia.Map('#map');
 let marker;
-let currentTimeZone;
+let timeObj;
 
 // ISS の画像をアニメーション
 function moveISS(marker) {
@@ -10,8 +10,7 @@ function moveISS(marker) {
       const cordinates = [data.longitude,data.latitude];
       marker.setLngLat(cordinates).addTo(map);
       map.flyTo({center: cordinates});
-      const time = timespace.getFuzzyLocalTimeFromPoint(Date.now(), [cordinates[1],cordinates[0]]);
-      currentTimeZone = time._z.name
+      timeObj = timespace.getFuzzyLocalTimeFromPoint(Date.now(), cordinates);
     });
   setTimeout(function(){moveISS(marker)}, 5000);
 }
@@ -51,8 +50,17 @@ const updateTimeCycle = () => {
   
   updateTime('.jst span',`${year}/${month}/${date} ${hour+9}:${min}:${second} GMT+0900`);
 
-  updateTime('.local span',`${year}/${month}/${date} ${timeZoneList[currentTimeZone]}:${min}:${second} GMT+0900`);
-  updateTime('.local span','0:00');
+  const localTime;
+  if (timeObj) {
+    const currentTimeZone = timeObj._z.name
+    const timeZoneOffset = timeZoneList[currentTimeZone];
+    const timeZoneOffsetText = `${timeZoneOffset}`.padStart(2, "0");
+    localTime = `${year}/${month}/${date} ${hour+timeZoneOffset}:${min}:${second} GMT${timeZoneOffsetText}00`;
+  } else {
+    localTime = 'Can not get local time because ISS fly over the sea.'
+  }
+
+  updateTime('.local span', localTime);
 
 }
 setInterval(updateTimeCycle, 1000);
