@@ -135,26 +135,29 @@ const updateTimeCycle = () => {
   const second = UTC.getSeconds();
 
   updateTime('.utc span', `${year}/${month}/${date} ${hour}:${min}:${second} GMT`);
-  
   updateTime('.jst span',`${year}/${month}/${date} ${hour+9}:${min}:${second} GMT+0900`);
   
+  // 陸上の UTC との時差を取得
   let timeZoneOffset = '';
   if (timeObj) {
     const currentTimeZone = timeObj._z.name
     console.log(currentTimeZone)
     timeZoneOffset = timeZoneList[currentTimeZone];
     console.log(timeZoneOffset)
-  } else {
-
-    if (currentCoordinates) {
-      const lng = currentCoordinates[0];
-      timeZoneOffset = parseInt( 12 * lng / 180)
-    }
+  }
+  
+  // 海上の UTC との時差を取得
+  if (!timeObj && currentCoordinates) {
+    const lng = currentCoordinates[0];
+    timeZoneOffset = parseInt( 12 * lng / 180)
+    console.log(timeZoneOffset)
   }
 
+  // 現地の日付と時間を取得
   const localDate = (0 > timeZoneOffset) ? date -1 : date;
   const localHour = (0 > hour+timeZoneOffset) ? 24 + timeZoneOffset : hour+timeZoneOffset;
 
+  // UTC との時差をテキストとして取得
   let timeZoneOffsetText = '';
   if (0 > timeZoneOffset) {
     timeZoneOffsetText = `${timeZoneOffset}`.slice(1).padStart(2, "0");
@@ -165,6 +168,7 @@ const updateTimeCycle = () => {
   }
   timeZoneOffsetText = `${timeZoneOffsetText}00`
 
+  // 現地時間を取得
   const localTime = `${year}/${month}/${localDate} ${localHour}:${min}:${second} GMT${timeZoneOffsetText}`;
 
   updateTime('.local span', localTime);
