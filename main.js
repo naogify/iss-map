@@ -1,19 +1,20 @@
 const map = new geolonia.Map('#map');
 let marker;
 let timeObj;
+let currentCoordinates;
 
 // ISS の画像をアニメーション
 function moveISS(marker) {
   fetch('https://api.wheretheiss.at/v1/satellites/25544')
     .then(response => response.json())
     .then(data => {
-      const cordinates = [data.longitude,data.latitude];
-      marker.setLngLat(cordinates).addTo(map);
-      map.flyTo({center: cordinates});
-      console.log(cordinates)
-      timeObj = timespace.getFuzzyLocalTimeFromPoint(Date.now(), cordinates);
+      const coordinates = [data.longitude,data.latitude];
+      marker.setLngLat(coordinates).addTo(map);
+      map.flyTo({center: coordinates});
+      currentCoordinates = coordinates
+      timeObj = timespace.getFuzzyLocalTimeFromPoint(Date.now(), coordinates);
     });
-  setTimeout(function(){moveISS(marker)}, 5000);
+  setTimeout(function(){moveISS(marker)}, 1000);
 }
 
 // 地図を表示
@@ -25,7 +26,6 @@ map.on('load', () => {
     offset: [-3,-28],
   })
   moveISS(marker);
-  // map.setStyle('https://raw.githubusercontent.com/geolonia/midnight/master/style.json');
 });
 
 
@@ -105,7 +105,23 @@ const timeZoneList = {
 'Pacific/Pitcairn': -8,
 'Pacific/Tongatapu':　+13,
 'UTC': +0,
-'Asia/Taipei': +8
+'Asia/Taipei': +8,
+'Indian/Christmas': +7,
+'America/Merida': -6,
+'America/Tegucigalpa': -6,
+'America/El_Salvador': -6,
+'America/Managua': -6,
+'America/Managua': -6,
+'America/Costa_Rica': -6,
+'America/Panama': -5,
+'America/Guayaquil': -5,
+'America/Lima': -5,
+'America/Eirunepe': -5,
+'America/Rio_Branco': -5,
+'America/La_Paz': -4,
+'America/Asuncion': -4,
+'America/Argentina/Cordoba': -3,
+'America/Sao_Paulo': -3
 }
 
 // 時間を更新
@@ -121,17 +137,36 @@ const updateTimeCycle = () => {
   updateTime('.utc span', `${year}/${month}/${date} ${hour}:${min}:${second} GMT`);
   
   updateTime('.jst span',`${year}/${month}/${date} ${hour+9}:${min}:${second} GMT+0900`);
-
-  let localTime = '';
+  
+  let timeZoneOffset = '';
   if (timeObj) {
     const currentTimeZone = timeObj._z.name
     console.log(currentTimeZone)
-    const timeZoneOffset = timeZoneList[currentTimeZone];
-    const timeZoneOffsetText = `${timeZoneOffset}`.padStart(2, "0");
-    localTime = `${year}/${month}/${date} ${hour+timeZoneOffset}:${min}:${second} GMT${timeZoneOffsetText}00`;
+    timeZoneOffset = timeZoneList[currentTimeZone];
+    console.log(timeZoneOffset)
   } else {
-    localTime = 'Can not get local time because ISS fly over the sea.'
+
+    if (currentCoordinates) {
+      const lng = currentCoordinates[0];
+      timeZoneOffset = parseInt( 12 * lng / 180)
+    }
   }
+
+  const localDate = (0 > timeZoneOffset) ? date -1 : date;
+  const localHour = (0 > hour+timeZoneOffset) ? 24 + timeZoneOffset : hour+timeZoneOffset;
+
+  let timeZoneOffsetText = '';
+  if (0 > timeZoneOffset) {
+    timeZoneOffsetText = `${timeZoneOffset}`.slice(1).padStart(2, "0");
+    timeZoneOffsetText = `-${timeZoneOffsetText}`
+  } else {
+    timeZoneOffsetText = `${timeZoneOffset}`.padStart(2, "0");
+    timeZoneOffsetText = `+${timeZoneOffsetText}`
+  }
+  timeZoneOffsetText = `${timeZoneOffsetText}00`
+
+  const localTime = `${year}/${month}/${localDate} ${localHour}:${min}:${second} GMT${timeZoneOffsetText}`;
+
   updateTime('.local span', localTime);
 
 }
