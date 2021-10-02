@@ -28,7 +28,6 @@ map.on('load', () => {
   moveISS(marker);
 });
 
-
 function updateTime(selector, date) {
   const elm = document.querySelector(selector);
   elm.innerHTML = date
@@ -170,8 +169,17 @@ const updateTimeCycle = () => {
 
   // 現地時間を取得
   const localTime = `${year}/${month}/${localDate} ${localHour}:${min}:${second} GMT${timeZoneOffsetText}`;
-
   updateTime('.local span', localTime);
+
+  // 現地時間によって地図のデザインを切り替える
+  console.log(localHour)
+
+  if (localHour < 5) {
+    map.setStyle('https://raw.githubusercontent.com/naogify/dragon-quest-style/gh-pages/style.json');
+  } else if (localHour >= 5 && localHour < 24) {
+    map.setStyle('https://raw.githubusercontent.com/naogify/evangelion-style/gh-pages/style.json');
+  }
+
 
 }
 setInterval(updateTimeCycle, 1000);
