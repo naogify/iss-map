@@ -128,7 +128,8 @@ const timeZoneList = {
 'Indian/Maldives': +5,
 'Asia/Urumqi': +6,
 'Asia/Chongqing': +8,
-'Asia/Harbin': +8
+'Asia/Harbin': +8,
+'Asia/Sakhalin': +11
 }
 
 // 時間を更新
