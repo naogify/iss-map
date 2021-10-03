@@ -127,7 +127,8 @@ const timeZoneList = {
 'Indian/Mauritius': +4,
 'Indian/Maldives': +5,
 'Asia/Urumqi': +6,
-'Asia/Chongqing': +8
+'Asia/Chongqing': +8,
+'Asia/Harbin': +8
 }
 
 // 時間を更新
@@ -199,11 +200,11 @@ const updateTimeCycle = () => {
     // 現地時間によって地図のデザインを切り替える
   if (localHour >= 6 && localHour < 18) {
     if (lastHour !== 'day') {
-      // map.setStyle('https://raw.githubusercontent.com/geolonia/basic/master/style.json');
+      map.setStyle('https://gist.githubusercontent.com/YutoChip/612a85868b6d299b73482c5e7bc3c02c/raw/e793a7dce90451ad846f062802b5dc0decf21cff/daytime.json');
       lastHour = 'day'
     }
   } else if (localHour >= 18 || localHour < 6 ) {    if (lastHour !== 'night') {
-      // map.setStyle('https://gist.githubusercontent.com/naogify/f8cfdf959f3a0208ac466a84c1972ce3/raw/b38b66d08217159d44a9105e8be3644a6067214a/late-night.json');
+      map.setStyle('https://gist.githubusercontent.com/kentarokiyono/7a286f42504a8c4aa83daabd16f64c8e/raw/6f435c0fdfaa99dafcb6f959d12a4bff5073fa19/night.json');
       lastHour = 'night'
     }
   }
