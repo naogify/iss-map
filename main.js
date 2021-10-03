@@ -124,7 +124,10 @@ const timeZoneList = {
 'America/Sao_Paulo': -3,
 'America/Cancun': -5,
 'America/Porto_Velho': -4,
-'Indian/Mauritius': +4
+'Indian/Mauritius': +4,
+'Indian/Maldives': +5,
+'Asia/Urumqi': +6,
+'Asia/Chongqing': +8
 }
 
 // 時間を更新
