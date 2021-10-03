@@ -123,7 +123,8 @@ const timeZoneList = {
 'America/Argentina/Cordoba': -3,
 'America/Sao_Paulo': -3,
 'America/Cancun': -5,
-'America/Porto_Velho': -4
+'America/Porto_Velho': -4,
+'Indian/Mauritius': +4
 }
 
 // 時間を更新
