@@ -2,6 +2,7 @@ const map = new geolonia.Map('#map');
 let marker;
 let timeObj;
 let currentCoordinates;
+let lastHour = '';
 
 // ISS の画像をアニメーション
 function moveISS(marker) {
@@ -14,7 +15,7 @@ function moveISS(marker) {
       currentCoordinates = coordinates
       timeObj = timespace.getFuzzyLocalTimeFromPoint(Date.now(), coordinates);
     });
-  setTimeout(function(){moveISS(marker)}, 1000);
+  setTimeout(function(){moveISS(marker)}, 5000);
 }
 
 // 地図を表示
@@ -120,7 +121,9 @@ const timeZoneList = {
 'America/La_Paz': -4,
 'America/Asuncion': -4,
 'America/Argentina/Cordoba': -3,
-'America/Sao_Paulo': -3
+'America/Sao_Paulo': -3,
+'America/Cancun': -5,
+'America/Porto_Velho': -4
 }
 
 // 時間を更新
@@ -152,9 +155,27 @@ const updateTimeCycle = () => {
     console.log(timeZoneOffset)
   }
 
+  function getLocalDateHour(timeZoneOffset, date, hour) {
+
+    let localDate = date;
+    let localHour = hour+timeZoneOffset;
+
+    if (0 > hour+timeZoneOffset) {
+      localDate = date -1
+      localHour = 24 + (hour + timeZoneOffset)
+    }
+
+    if (24 <= hour+timeZoneOffset) {
+      localDate = date + 1
+      localHour = (hour + timeZoneOffset ) -24
+    }
+
+    return {localDate, localHour}
+
+  }
+
   // 現地の日付と時間を取得
-  const localDate = (0 > timeZoneOffset) ? date -1 : date;
-  const localHour = (0 > hour+timeZoneOffset) ? 24 + timeZoneOffset : hour+timeZoneOffset;
+  const {localDate,localHour} = getLocalDateHour(timeZoneOffset, date, hour);
 
   // UTC との時差をテキストとして取得
   let timeZoneOffsetText = '';
@@ -171,11 +192,16 @@ const updateTimeCycle = () => {
   const localTime = `${year}/${month}/${localDate} ${localHour}:${min}:${second} GMT${timeZoneOffsetText}`;
   updateTime('.local span', localTime);
 
-  // 現地時間によって地図のデザインを切り替える
+    // 現地時間によって地図のデザインを切り替える
   if (localHour >= 6 && localHour < 18) {
-    map.setStyle('https://gist.githubusercontent.com/YutoChip/2542338d9312fd6eaa22b1ff46265511/raw/47fe126490cb8d79ddb5f628aad4dc4908efb043/something.json');
-  } else if (localHour >= 18 && localHour < 6 ) {
-    map.setStyle('https://gist.githubusercontent.com/kentarokiyono/487e70134441af71e2b4b132cc0ffaa0/raw/11ea20dffa8bcd4c71693916e9ade98ff04fa994/night.json');
+    if (lastHour !== 'day') {
+      // map.setStyle('https://raw.githubusercontent.com/geolonia/basic/master/style.json');
+      lastHour = 'day'
+    }
+  } else if (localHour >= 18 || localHour < 6 ) {    if (lastHour !== 'night') {
+      // map.setStyle('https://gist.githubusercontent.com/naogify/f8cfdf959f3a0208ac466a84c1972ce3/raw/b38b66d08217159d44a9105e8be3644a6067214a/late-night.json');
+      lastHour = 'night'
+    }
   }
 
 }
